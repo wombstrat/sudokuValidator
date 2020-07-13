@@ -31,7 +31,7 @@ public class Sudoku {
                 Character sudokuElement = board[row][column];
                 if (sudokuElement == '.' && !findPossibleSolution(board, row, column)) {
                     return false;
-                } else if (!isValidValue(board, row, column)) {
+                } else if (!isValidValue(sudokuElement, board, row, column)) {
                     return false;
                 }
 
@@ -44,27 +44,28 @@ public class Sudoku {
     /**
      * Checks number is not repeated in the same row, column or 3x3 grid.
      * if it is repeated false will be returned.
-     *
+     * <p>
      * NOTE: As a performance improvement, we might add some cache as lists for rows, columns and subGrids,
      * to avoid having to re-iterate them everytime, so wcould have in constant time the instances of a value in row, column subGrid.
      */
-    private static boolean isValidValue(Character[][] board, int row, int column) {
+    private static boolean isValidValue(char sudokuNumber, Character[][] board, int row, int column) {
         int rowGrid = findGridRow(row);
         int columnGrid = findGridColumn(column);
 
-        return isValueNotRepeatedInSubGrid(row, column, board, rowGrid, columnGrid) &&
-                isValueNotRepeatedInRow(row, column, board) &&
-                isValueNotRepeatedInColumn(row, column, board);
+        return isValueNotRepeatedInSubGrid(sudokuNumber, row, column, board, rowGrid, columnGrid) &&
+                isValueNotRepeatedInRow(sudokuNumber, row, column, board) &&
+                isValueNotRepeatedInColumn(sudokuNumber, row, column, board);
     }
 
-    private static boolean isValueNotRepeatedInColumn(int currentRow, int currentColumn, Character[][] board) {
-        char sudokuElement = board[currentRow][currentColumn];
+    private static boolean isValueNotRepeatedInColumn(char sudokuElement, int currentRow, int currentColumn, Character[][] board) {
 
         for (int row = 0; row < board.length; row++) {
             if (row == currentRow) {
                 continue;
             }
-            if (board[row][currentColumn] == sudokuElement) {
+            Character element = board[row][currentColumn];
+            checkIsNotDot(element, sudokuElement, row, currentColumn);
+            if (element == sudokuElement) {
                 return false;
             }
         }
@@ -72,31 +73,44 @@ public class Sudoku {
 
     }
 
-    private static boolean isValueNotRepeatedInRow(int currentRow, int currentColumn, Character[][] board) {
-        char sudokuElement = board[currentRow][currentColumn];
+    private static boolean isValueNotRepeatedInRow(char sudokuElement, int currentRow, int currentColumn, Character[][] board) {
+
 
         for (int column = 0; column < board[0].length; column++) {
             if (column == currentColumn) {
                 continue;
             }
-            if (board[currentRow][column] == sudokuElement) {
+            Character element = board[currentRow][column];
+
+            checkIsNotDot(element, sudokuElement, currentColumn, column);
+
+
+            if (element == sudokuElement) {
                 return false;
             }
         }
         return true;
     }
 
+    private static void checkIsNotDot(char element, char currentElement, int currentColumn, int column) {
+        if (element == '.' && currentElement == '.') {
+            String message = String.format(". detected at same column, can't check if it's valid or not at [%d, %d]", currentColumn, column);
+            throw new IllegalStateException(message);
+        }
+    }
+
     /**
      * Check is the subGrid of 3x3 contains the current value repeated.
      */
-    private static boolean isValueNotRepeatedInSubGrid(int currentRow, int currentColumn, Character[][] board, int rowGrid, int columnGrid) {
-        char sudokuElement = board[currentRow][currentColumn];
+    private static boolean isValueNotRepeatedInSubGrid(char sudokuElement, int currentRow, int currentColumn, Character[][] board, int rowGrid, int columnGrid) {
         for (int row = rowGrid; row < rowGrid + 3; row++) {
             for (int column = columnGrid; column < columnGrid + 3; column++) {
                 if (row == currentRow && column == currentColumn) {
                     continue;
                 }
-                if (board[row][column] == sudokuElement)
+                Character element = board[row][column];
+                checkIsNotDot(element, sudokuElement, row, column);
+                if (element == sudokuElement)
                     return false;
             }
         }
@@ -129,8 +143,9 @@ public class Sudoku {
      */
     private static boolean findPossibleSolution(Character[][] board, int row, int column) {
         for (int solution = 1; solution <= 9; solution++) {
-            board[row][column] = String.valueOf(solution).charAt(0);
-            if (isValidValue(board, row, column)) {
+            char posibleSolution = String.valueOf(solution).charAt(0);
+            if (isValidValue(posibleSolution, board, row, column)) {
+                board[row][column] = String.valueOf(solution).charAt(0);
                 return true;
             }
         }
