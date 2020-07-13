@@ -5,7 +5,7 @@ The '.' feature only it's suggested base don the rules of the same value, if a c
 due this is not a sudoku resolver.
 
 
-Check SudokuTest class for scenarios tested, and Sudoku utility class to see implementation.
+Check [SudokuTest](https://github.com/wombstrat/sudokuValidator/blob/master/src/test/java/com/distillery/sudoku/SudokuTest.java) class for scenarios tested, and [Sudoku](https://github.com/wombstrat/sudokuValidator/blob/master/src/main/java/com/distillery/sudoku/Sudoku.java) utility class to see implementation.
 
 # TODO
 
