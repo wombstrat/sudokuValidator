@@ -1,0 +1,26 @@
+dependency-reduced-pom.xml
+*.iml
+target
+
+# Intellij
+.idea
+
+# Visual Studio Code
+.project
+.settings
+.classpath
+
+# Local Dev
+.local_env
+
+.DS_Store
+
+config/local-config.yml
+config/use1-config.yml
+
+# Gradle
+.gradle
+
+build
+
+code/**/out/
