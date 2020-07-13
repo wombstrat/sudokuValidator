@@ -44,6 +44,9 @@ public class Sudoku {
     /**
      * Checks number is not repeated in the same row, column or 3x3 grid.
      * if it is repeated false will be returned.
+     *
+     * NOTE: As a performance improvement, we might add some cache as lists for rows, columns and subGrids,
+     * to avoid having to re-iterate them everytime, so wcould have in constant time the instances of a value in row, column subGrid.
      */
     private static boolean isValidValue(Character[][] board, int row, int column) {
         int rowGrid = findGridRow(row);
