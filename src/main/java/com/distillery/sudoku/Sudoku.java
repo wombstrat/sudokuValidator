@@ -20,6 +20,10 @@ public class Sudoku {
      */
     public static boolean isValidSudoku(Character[][] board) {
 
+        if (board == null || board.length != 9 || board[0].length != 9) {
+            throw new IllegalArgumentException("This is not a sudoku board");
+        }
+
         for (int row = 0; row < board.length; row++) {
 
             for (int column = 0; column < board[0].length; column++) {
